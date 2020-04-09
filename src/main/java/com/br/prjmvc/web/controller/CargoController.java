@@ -44,7 +44,7 @@ public class CargoController {
 	public String salvar(@Valid Cargo cargo,BindingResult result,RedirectAttributes attr) {
 		
 		if(result.hasErrors()) {
-			return "/cargos/cadastro";
+			return "/cargo/cadastro";
 		}
 		
 		cargoService.salvar(cargo);
@@ -67,7 +67,7 @@ public class CargoController {
 	public String editar(@Valid Cargo cargo,BindingResult result, RedirectAttributes attr) {
 		
 		if(result.hasErrors()) {
-			return "/cargos/cadastro";
+			return "/cargo/cadastro";
 		}
 		
 		cargoService.editar(cargo);

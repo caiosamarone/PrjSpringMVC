@@ -9,6 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -19,18 +24,26 @@ import org.springframework.format.annotation.NumberFormat.Style;
 @Table(name="FUNCIONARIOS")
 public class Funcionario extends AbstractEntity<Long>{
 	
+	@NotBlank
+	@Size(max = 255, min = 3)
 	@Column(nullable = false, unique = true)
 	private String nome;
 	
+	
+	@NotNull(message = "{NotNull.funcionario.cargo}")
 	@ManyToOne
 	@JoinColumn(name = "cargo_id_fk")
 	private Cargo cargo;
 	
 	//columndefinition serve para mapear o tipo do dado no BD e ja deixar um valor default 
+	@NotNull
 	@NumberFormat(style = Style.CURRENCY, pattern = "#,##0.00")
 	@Column(nullable = false, columnDefinition = "DECIMAL(7,2) DEFAULT 0.00")
 	private BigDecimal salario;
 	
+	
+	@NotNull
+	@PastOrPresent(message="{PastOrPresent.funcionario.dataEntrada}")
 	@DateTimeFormat(iso = ISO.DATE)
 	@Column(name = "data_entrada", nullable = false, columnDefinition = "DATE")
 	private LocalDate dataEntrada;
@@ -40,6 +53,7 @@ public class Funcionario extends AbstractEntity<Long>{
 	private LocalDate dataSaida;
 	
 	//qnd criar um func automaticamente cria um endereç
+	@Valid
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "endereco_id_fk")
 	private Endereco endereco;
