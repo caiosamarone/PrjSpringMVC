@@ -25,19 +25,19 @@ public class DepartamentoController {
 	
 	@GetMapping("/cadastrar")
 	public String cadastrar(Departamento departamento) {
-		return "/departamento/cadastro";
+		return "departamento/cadastro";
 	}
 	
 	@GetMapping("/listar")
 	public String listar(ModelMap model) {
 		model.addAttribute("departamentos",service.buscarTodos());
-		return "/departamento/lista";
+		return "departamento/lista";
 	}
 	
 	@PostMapping("/salvar")
 	public String salvar(@Valid Departamento departamento,BindingResult result,RedirectAttributes attr) {
 		if(result.hasErrors()) {
-			return "/departamento/cadastro";
+			return "departamento/cadastro";
 		}
 		service.salvar(departamento);
 		attr.addFlashAttribute("success","Departamento criado com sucesso.");
@@ -47,13 +47,13 @@ public class DepartamentoController {
 	@GetMapping("/editar/{id}")
 	public String preEditar(@PathVariable("id")Long id, ModelMap model) {
 		model.addAttribute("departamento", service.buscarPorId(id));
-		return "/departamento/cadastro";
+		return "departamento/cadastro";
 	}
 	@PostMapping("/editar")
 	public String editar(@Valid Departamento departamento,BindingResult result,RedirectAttributes attr) {
 		
 		if(result.hasErrors()) {
-			return "/departamento/cadastro";
+			return "departamento/cadastro";
 		}
 		service.editar(departamento);
 		attr.addFlashAttribute("success","Departamento editado com sucesso.");
@@ -61,17 +61,17 @@ public class DepartamentoController {
 	}
 	
 	@GetMapping("/excluir/{id}")
-	public String excluir(@PathVariable("id")Long id, ModelMap model) {
+	public String excluir(@PathVariable("id")Long id,RedirectAttributes attr) {
 		if(service.temCargo(id))
 		{
-			model.addAttribute("fail","Departamento não removido.Possui cargo(s) vinculado(s).");
+			attr.addFlashAttribute("fail","Departamento não excluído. Possui cargo(s) vinculados.");
 		}
 		else
 		{
 			service.excluir(id);
-			model.addAttribute("success","Departamento removido com sucesso.");
+			attr.addFlashAttribute("success","Departamento excluído com sucesso.");
 		}
-		return listar(model);
+		return "redirect:/departamentos/listar";
 	}
 	
 }

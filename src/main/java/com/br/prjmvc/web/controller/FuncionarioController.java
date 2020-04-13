@@ -46,19 +46,19 @@ public class FuncionarioController {
 	
 	@GetMapping("/cadastrar")
 	public String cadastrar(Funcionario funcionario) {
-		return "/funcionario/cadastro";
+		return "funcionario/cadastro";
 	}
 	
 	@GetMapping("/listar")
 	public String listar(ModelMap model) {
 		model.addAttribute("funcionarios",funcService.buscarTodos());
-		return "/funcionario/lista";
+		return "funcionario/lista";
 	}
 	
 	@PostMapping("/salvar")
 	public String salvar(@Valid Funcionario funcionario,BindingResult result,RedirectAttributes attr) {
 		if(result.hasErrors()) {
-			return "/funcionario/cadastro";
+			return "funcionario/cadastro";
 		}
 		funcService.salvar(funcionario);
 		attr.addFlashAttribute("success","Funcionario criado com sucesso.");
@@ -80,12 +80,12 @@ public class FuncionarioController {
 	@GetMapping("/editar/{id}")
 	public String preEditar(@PathVariable("id")Long id, ModelMap model) {
 		model.addAttribute("funcionario", funcService.buscarPorId(id));
-		return "/funcionario/cadastro";
+		return "funcionario/cadastro";
 	}
 	@PostMapping("/editar")
 	public String editar(@Valid Funcionario funcionario,BindingResult result, RedirectAttributes attr) {
 		if(result.hasErrors()) {
-			return "/funcionario/cadastro";
+			return "funcionario/cadastro";
 		}
 		funcService.editar(funcionario);
 		attr.addFlashAttribute("success","Funcionario editado com sucesso.");
@@ -93,30 +93,30 @@ public class FuncionarioController {
 	}
 	
 	@GetMapping("/excluir/{id}")
-	public String excluir(@PathVariable("id")Long id, ModelMap model) {		
+	public String excluir(@PathVariable("id")Long id,RedirectAttributes attr) {		
 		funcService.excluir(id);	
-		model.addAttribute("success","Funcionario removido com sucesso.");
+		attr.addFlashAttribute("success","Funcionário excluído com sucesso.");
 		
-		return listar(model);
+		return "redirect:/funcionarios/listar";
 	}
 	
 	@GetMapping("/buscar/nome")
 	public String buscarPorNome(@RequestParam("nome") String nome, ModelMap model) {
 		model.addAttribute("funcionarios",funcService.buscarPorNome(nome));
-		return "/funcionario/lista";
+		return "funcionario/lista";
 	}
 	
 	@GetMapping("/buscar/cargo")
 	public String buscarPorCargo(@RequestParam("cargo") String cargo, ModelMap model) {
 		model.addAttribute("funcionarios",funcService.buscarPorCargo(cargo));
-		return "/funcionario/lista";
+		return "funcionario/lista";
 	}
 	@GetMapping("/buscar/data")
 	public String buscarPorData(@RequestParam("entrada") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate entrada,
 								@RequestParam("saida") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate saida, 
 								ModelMap model) {
 		model.addAttribute("funcionarios",funcService.buscarPorData(entrada,saida));
-		return "/funcionario/lista";
+		return "funcionario/lista";
 	}
 	
 }
